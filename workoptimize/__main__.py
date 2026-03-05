@@ -37,6 +37,17 @@ def main() -> None:
     ask_parser = subparsers.add_parser("ask", help="Ask a question about your current screen")
     ask_parser.add_argument("question", nargs="+", help="Your question")
 
+    # Serve command (API backend for Tauri frontend)
+    serve_parser = subparsers.add_parser("serve", help="Start the API backend for the desktop app")
+    serve_parser.add_argument(
+        "--port", type=int, default=8321,
+        help="Port to listen on (default: 8321)",
+    )
+    serve_parser.add_argument(
+        "--host", type=str, default="127.0.0.1",
+        help="Host to bind to (default: 127.0.0.1)",
+    )
+
     # Automate command
     auto_parser = subparsers.add_parser(
         "automate", help="Generate automation for a detected pattern"
@@ -70,6 +81,12 @@ def main() -> None:
         app = WorkOptimizeApp(settings)
         answer = app.ask_question(question)
         print(f"\n{answer}\n")
+
+    elif args.command == "serve":
+        import uvicorn
+        from workoptimize.api.server import create_app
+        api_app = create_app(data_dir=settings.data_dir)
+        uvicorn.run(api_app, host=args.host, port=args.port, log_level="info")
 
     elif args.command == "automate":
         from workoptimize.app import WorkOptimizeApp
