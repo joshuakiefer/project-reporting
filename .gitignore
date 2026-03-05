@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# WorkOptimize data (never commit user data)
+*.enc
+*.keystore
+audit.jsonl
+patterns.db
+workoptimize.log
+captures/
+
+# Config with secrets
+config.yaml
+
+# OS
+.DS_Store
+Thumbs.db
