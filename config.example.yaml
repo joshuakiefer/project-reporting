@@ -1,0 +1,37 @@
+# WorkOptimize AI Configuration
+# Copy this file to config.yaml and customize
+
+capture:
+  interval_seconds: 5            # How often to capture screen (seconds)
+  excluded_apps:                  # Apps to never capture (case-insensitive)
+    - "1Password"
+    - "LastPass"
+    - "Bitwarden"
+  excluded_urls: []               # URL patterns to skip
+  excluded_window_titles:         # Window titles to skip
+    - "password"
+    - "bank"
+    - "incognito"
+  blur_sensitive: true            # Auto-blur detected sensitive content
+
+analysis:
+  model: "claude-sonnet-4-20250514"    # Claude model to use
+  max_tokens: 1024               # Max response tokens per analysis
+  analysis_mode: "auto"          # "auto", "quick", or "deep"
+  enable_workflow_tracking: true  # Track patterns over time
+
+security:
+  encrypt_at_rest: true           # Encrypt all stored data with AES-256
+  retention_days: 30              # Auto-delete data older than this
+  audit_logging: true             # Log all capture and analysis events
+  redact_sensitive: true          # Redact SSNs, credit cards, etc. before API calls
+
+ui:
+  overlay_position: "bottom-right"  # "bottom-right", "bottom-left", "top-right", "top-left"
+  theme: "dark"                     # "dark" or "light"
+  opacity: 0.92                     # Window opacity (0.0 - 1.0)
+  width: 380                        # Overlay width in pixels
+  show_on_startup: true             # Show overlay when app starts
+
+# Where to store captured data (default: ~/.workoptimize)
+# data_dir: "/path/to/custom/data/dir"
