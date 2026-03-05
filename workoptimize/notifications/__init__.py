@@ -1,0 +1,1 @@
+"""Smart notification system."""

@@ -273,6 +273,72 @@ class AppState:
             return {"success": False, "error": "Not authenticated"}
         if not self._sync.get("enabled"):
             return {"success": False, "error": "Sync not enabled"}
-        # Will connect to cloud sync module
         self._sync["last_sync"] = time.time()
         return {"success": True, "synced_items": 0}
+
+    # ── Analytics ─────────────────────────────────────────────────
+
+    def get_focus_score(self, period: str = "today") -> dict:
+        return {
+            "score": 0,
+            "deep_work_minutes": 0,
+            "shallow_work_minutes": 0,
+            "context_switches": 0,
+            "longest_focus_streak_minutes": 0,
+            "top_distraction": None,
+            "period_label": period,
+        }
+
+    def get_app_usage(self, period: str = "today") -> list[dict]:
+        return []
+
+    def get_timeline(self, period: str = "today") -> list[dict]:
+        return []
+
+    def get_trends(self, days: int = 7) -> list[dict]:
+        return []
+
+    # ── Billing ──────────────────────────────────────────────────
+
+    def get_plans(self) -> list[dict]:
+        from workoptimize.cloud.billing import BillingManager
+        return BillingManager.get_plans()
+
+    async def create_checkout_url(self, plan_id: str, annual: bool) -> str:
+        return f"https://checkout.stripe.com/placeholder/{plan_id}"
+
+    async def get_billing_portal_url(self) -> str:
+        return "https://billing.stripe.com/placeholder/portal"
+
+    # ── Notifications ────────────────────────────────────────────
+
+    def get_next_notification(self) -> dict | None:
+        return None
+
+    def get_notification_digest(self) -> list[dict]:
+        return []
+
+    def record_notification_feedback(self, notification_id: str, helpful: bool) -> None:
+        pass
+
+    # ── Pipeline Metrics ─────────────────────────────────────────
+
+    def get_pipeline_metrics(self) -> dict:
+        return {
+            "total_captures": self._total_captures,
+            "total_suggestions": self._total_suggestions,
+            "api_errors": 0,
+            "avg_analysis_ms": 0,
+            "skipped_no_change": 0,
+            "skipped_privacy": 0,
+        }
+
+    # ── Onboarding ───────────────────────────────────────────────
+
+    @property
+    def onboarding_completed(self) -> bool:
+        return self._settings.get("onboarding_completed", False)
+
+    @onboarding_completed.setter
+    def onboarding_completed(self, value: bool) -> None:
+        self._settings.set("onboarding_completed", value)

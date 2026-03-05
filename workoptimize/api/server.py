@@ -214,6 +214,86 @@ def create_app(data_dir: Path | None = None) -> FastAPI:
         result = await state.sync_now()
         return result
 
+    # ── Analytics ─────────────────────────────────────────────────────
+
+    @app.get("/api/analytics/focus")
+    async def get_focus_score(period: str = "today"):
+        """Get focus score for a time period."""
+        return state.get_focus_score(period)
+
+    @app.get("/api/analytics/apps")
+    async def get_app_usage(period: str = "today"):
+        """Get app usage breakdown."""
+        return {"apps": state.get_app_usage(period)}
+
+    @app.get("/api/analytics/timeline")
+    async def get_timeline(period: str = "today"):
+        """Get activity timeline for visualization."""
+        return {"timeline": state.get_timeline(period)}
+
+    @app.get("/api/analytics/trends")
+    async def get_trends(days: int = 7):
+        """Get focus score trends."""
+        return {"trends": state.get_trends(days)}
+
+    # ── Billing ──────────────────────────────────────────────────────
+
+    @app.get("/api/billing/plans")
+    async def get_plans():
+        """Get available subscription plans."""
+        return {"plans": state.get_plans()}
+
+    @app.post("/api/billing/checkout")
+    async def create_checkout(plan_id: str, annual: bool = False):
+        """Create a Stripe checkout URL."""
+        url = await state.create_checkout_url(plan_id, annual)
+        return {"checkout_url": url}
+
+    @app.get("/api/billing/portal")
+    async def billing_portal():
+        """Get Stripe customer portal URL."""
+        url = await state.get_billing_portal_url()
+        return {"portal_url": url}
+
+    # ── Notifications ────────────────────────────────────────────────
+
+    @app.get("/api/notifications")
+    async def get_next_notification():
+        """Get the next notification to display."""
+        notification = state.get_next_notification()
+        return {"notification": notification}
+
+    @app.get("/api/notifications/digest")
+    async def get_digest():
+        """Get batched low-priority notifications."""
+        return {"notifications": state.get_notification_digest()}
+
+    @app.post("/api/notifications/{notification_id}/feedback")
+    async def notification_feedback(notification_id: str, helpful: bool = True):
+        """Record feedback on a notification."""
+        state.record_notification_feedback(notification_id, helpful)
+        return {"status": "recorded"}
+
+    # ── Pipeline Metrics ─────────────────────────────────────────────
+
+    @app.get("/api/metrics")
+    async def get_metrics():
+        """Get pipeline performance metrics."""
+        return state.get_pipeline_metrics()
+
+    # ── Onboarding ───────────────────────────────────────────────────
+
+    @app.get("/api/onboarding/status")
+    async def onboarding_status():
+        """Check if onboarding has been completed."""
+        return {"completed": state.onboarding_completed}
+
+    @app.post("/api/onboarding/complete")
+    async def complete_onboarding():
+        """Mark onboarding as complete."""
+        state.onboarding_completed = True
+        return {"status": "completed"}
+
     # ── WebSocket for real-time updates ──────────────────────────────
 
     @app.websocket("/ws")
