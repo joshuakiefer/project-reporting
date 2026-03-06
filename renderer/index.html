@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'" />
+  <title>Workflow AI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- API Key Modal -->
+  <div id="api-key-modal" class="modal">
+    <div class="modal-content">
+      <h2>Configure Claude API Key</h2>
+      <p>Enter your Anthropic API key to get started. Get one at
+        <span class="link">console.anthropic.com</span></p>
+      <input type="password" id="api-key-input" placeholder="sk-ant-..." />
+      <div id="api-key-error" class="error hidden"></div>
+      <button id="save-api-key" class="btn-primary">Connect</button>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="hidden">
+    <header>
+      <h1>Workflow AI</h1>
+      <div class="header-actions">
+        <select id="workflow-select">
+          <option value="">General Assistant</option>
+          <option value="email">Email Drafting</option>
+          <option value="report">Report Writing</option>
+          <option value="analysis">Data Analysis</option>
+          <option value="code">Code Review</option>
+        </select>
+        <button id="change-api-key" class="btn-secondary" title="Change API Key">API Key</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="chat-messages"></div>
+      <div id="typing-indicator" class="hidden">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        Claude is thinking...
+      </div>
+    </main>
+
+    <footer>
+      <textarea id="user-input" placeholder="Type your message..." rows="2"></textarea>
+      <button id="send-btn" class="btn-primary">Send</button>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
